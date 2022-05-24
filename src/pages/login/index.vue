@@ -14,7 +14,7 @@
         </el-form-item>
         <el-form-item>
           <el-input
-            v-model="form.code"
+            v-model="form.password"
             prefix-icon="el-icon-key"
             placeholder="密码"
             show-password
@@ -39,8 +39,8 @@ export default {
   data () {
     return {
       form: {
-        account: '',
-        code: ''
+        account: 'admin',
+        password: '123456'
       },
       disabled: false,
       isLoading: false

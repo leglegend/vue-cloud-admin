@@ -22,3 +22,11 @@ export function editUser (data) {
     data
   })
 }
+
+export function queryUser (data) {
+  return request({
+    url: '/user/query',
+    method: 'post',
+    data
+  })
+}

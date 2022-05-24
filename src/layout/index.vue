@@ -121,7 +121,10 @@ export default {
     },
     handleCommand (command) {
       console.log(command)
-      if (command === 'persion') { this.$router.push({ name: 'MemberDetail' }) }
+      if (command === 'persion') { this.$router.push({ name: 'MemberDetail' }) } else {
+        localStorage.removeItem('token')
+        this.$router.push('/login')
+      }
     },
     toggleAside () {
       this.$store.dispatch('app/toggleAside', {
