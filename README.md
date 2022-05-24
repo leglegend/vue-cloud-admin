@@ -21,8 +21,10 @@
 <p align="center">
   <img width="900" src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-14903f47-ecdc-4230-b720-dd24d6d48f85/2b6695b0-4bac-4702-9691-a0de3b604f8a.jpeg">
 </p>
+
 ## 使用
-```
+
+```bash
 # 克隆代码
 git clone https://github.com/ni5328109/vue-cloud-admin.git
 
@@ -36,6 +38,6 @@ npm install
 npm run serve
 ```
 ## 发布
-```
+```bash
 npm run build
 ```
