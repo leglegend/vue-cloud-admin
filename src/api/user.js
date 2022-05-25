@@ -1,7 +1,8 @@
 import request from '@/utils/request'
+import cloud from '@/utils/cloud'
 
 export function login (data) {
-  return request({
+  return cloud({
     url: '/user/login',
     method: 'post',
     data

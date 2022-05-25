@@ -35,43 +35,35 @@
 </template>
 
 <script>
-export default {
-  data () {
-    return {
-      form: {
-        account: 'admin',
-        password: '123456'
-      },
-      disabled: false,
-      isLoading: false
-    }
-  },
-  methods: {
-    onLogin () {
-      this.disabled = true
-      this.isLoading = true
-      const loginInfo = {
-        account: this.form.account,
-        password: this.form.password
+  import { login } from '@/api/user.js'
+
+  export default {
+    data() {
+      return {
+        form: {
+          account: 'admin',
+          password: '123456'
+        },
+        disabled: false,
+        isLoading: false
       }
-      this.$store.dispatch('user/login', loginInfo).then((res) => {
-        this.$router.push({
-          path: '/'
+    },
+    methods: {
+      onLogin() {
+        this.disabled = true
+        this.isLoading = true
+        const loginInfo = {
+          account: this.form.account,
+          password: this.form.password
+        }
+        this.$store.dispatch('user/login', loginInfo).then((res) => {
+          this.$router.push({
+            path: '/'
+          })
         })
-      })
-      
+      }
     }
-  },
-  mounted() {
-uniCloud.callFunction({
-    name: 'user',
-    data: { a: 1 }
-   })
-  .then(res => {
-    console.log(res)
-  });
   }
-}
 </script>
 
 <style lang="scss">
