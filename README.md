@@ -18,6 +18,9 @@
 
 ## 简介
 [vue-cloud-admin](https://static-14903f47-ecdc-4230-b720-dd24d6d48f85.bspapp.com)采用最新的技术以及最简洁的实现方式，搭建一款能够迅速投入使用的后台系统。使用它立即投入生产，或通过它学习整个vue体系。
+- [在线预览](https://static-14903f47-ecdc-4230-b720-dd24d6d48f85.bspapp.com)
+- [uni-app版](https://github.com/ni5328109/vue-cloud-admin/tree/uniapp)支持uniCloud
+- vue3.0+vite版(构建中)
 <p align="center">
   <img width="900" src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-14903f47-ecdc-4230-b720-dd24d6d48f85/2b6695b0-4bac-4702-9691-a0de3b604f8a.jpeg">
 </p>
