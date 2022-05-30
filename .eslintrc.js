@@ -19,6 +19,7 @@ module.exports = {
   ],
   rules: {
     'vue/no-multiple-template-root': 0,
+    'vue/multi-word-component-names': 0,
     'no-unused-vars': [
       'error',
       // we are only using this rule to check for unused arguments since TS
