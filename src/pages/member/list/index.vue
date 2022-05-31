@@ -3,16 +3,19 @@
     <el-row>
       <el-col :span="24">
         <el-card shadow="hover">
-          <el-form ref="form" class="list-from" :model="form" label-position="left">
+          <el-form ref="searchFormRef" class="list-from" :model="searchForm" label-position="left">
             <el-row :gutter="50">
               <el-col :md="24" :lg="12">
                 <el-form-item label="关键字:" label-width="80px" prop="keyWord">
-                  <el-input v-model="form.keyWord" placeholder="手机号 | 姓名 | 昵称"></el-input>
+                  <el-input
+                    v-model.trim="searchForm.keyWord"
+                    placeholder="手机号 | 姓名 | 昵称"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :md="24" :lg="12">
                 <el-form-item label="性别:" label-width="80px" prop="sex">
-                  <el-select v-model="form.sex" clearable placeholder="请选择">
+                  <el-select v-model="searchForm.sex" clearable placeholder="请选择">
                     <el-option label="男" value="1"></el-option>
                     <el-option label="女" value="0"></el-option>
                   </el-select>
@@ -22,19 +25,19 @@
                 <el-form-item label="注册日期:" label-width="80px" prop="beginDate">
                   <div class="date-box">
                     <el-date-picker
-                      v-model="form.beginDate"
+                      v-model="searchForm.beginDate"
                       type="date"
                       placeholder="开始日期"
-                      format="yyyy年MM月dd日"
-                      value-format="yyyy-MM-dd"
+                      format="YYYY年MM月DD日"
+                      value-format="YYYY-MM-DD"
                     ></el-date-picker>
                     <div class="box-center">-</div>
                     <el-date-picker
-                      v-model="form.endDate"
+                      v-model="searchForm.endDate"
                       type="date"
                       placeholder="结束日期"
-                      format="yyyy年MM月dd日"
-                      value-format="yyyy-MM-dd"
+                      format="YYYY年MM月DD日"
+                      value-format="YYYY-MM-DD"
                     ></el-date-picker>
                   </div>
                 </el-form-item>
@@ -42,7 +45,7 @@
               <el-col :md="24" :lg="12">
                 <el-form-item label="标签:" label-width="80px" prop="tags">
                   <el-select
-                    v-model="form.tags"
+                    v-model="searchForm.tags"
                     clearable
                     multiple
                     collapse-tags
@@ -60,7 +63,6 @@
                 <el-button
                   type="primary"
                   plain
-                  size="medium"
                   icon="el-icon-plus"
                   :loading="dialogVisible"
                   @click="dialogVisible = true"
@@ -69,12 +71,20 @@
                 </el-button>
               </el-col>
               <el-col class="form-button" :span="12">
-                <el-button type="primary" size="medium" @click="getTableList">查询</el-button>
-                <el-button size="medium" @click="resetForm(ruleFormRef)">重置</el-button>
+                <el-button type="primary" @click="getTableList(table.page, table.pageSize)">
+                  查询
+                </el-button>
+                <el-button @click="resetForm(searchFormRef)">重置</el-button>
               </el-col>
             </el-row>
           </el-form>
-          <el-table v-loading="loading" :data="tableData" border stripe style="width: 100%">
+          <el-table
+            v-loading="table.loading"
+            :data="table.tableData"
+            border
+            stripe
+            style="width: 100%"
+          >
             <el-table-column prop="name" label="昵称" width="170"></el-table-column>
             <el-table-column prop="phone" label="手机号" width="160"></el-table-column>
 
@@ -83,8 +93,8 @@
             <el-table-column prop="email" label="邮箱" width="180"></el-table-column>
 
             <el-table-column label="操作" align="center">
-              <template slot-scope="scope">
-                <el-button size="mini" @click="handleView(scope.row)">查看</el-button>
+              <template #default="scope">
+                <el-button size="small" @click="handleView(scope.row)">查看</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -92,12 +102,12 @@
             <el-pagination
               background
               layout="total, sizes, prev, pager, next"
-              :total="total"
+              :total="table.total"
               :page-sizes="[10, 30, 50]"
-              :page-size="pageSize"
-              :current-page="page"
-              @size-change="sizeChange"
-              @current-change="currentChange"
+              :page-size="table.pageSize"
+              :current-page="table.page"
+              @size-change="pageSizeChange"
+              @current-change="pageChange"
             ></el-pagination>
           </div>
         </el-card>
@@ -108,13 +118,13 @@
 </template>
 
 <script lang="ts" setup name="MemberList">
-  import { queryUser } from '@/api/user.js'
-  import list from '@/utils/mixin/list.js'
-  import { reactive, ref } from 'vue'
+  import { queryUser } from '@/api/user'
+  import useTable from '@/utils/hooks/table'
+  import { onMounted, reactive, ref, toRef, watch } from 'vue'
   import type { FormInstance } from 'element-plus'
   // import CreateMember from './components/CreateMember.vue'
 
-  const form = reactive({
+  const searchForm = reactive({
     keyWord: '',
     sex: '',
     beginDate: '',
@@ -122,93 +132,46 @@
     tags: []
   })
 
-  const table = reactive({
-    page: 0,
-    pageSize: 10,
-    total: 0
-  })
+  const { table, pageChange, pageSizeChange } = useTable()
 
-  const tableData = reactive([])
+  const page = toRef(table, 'page')
+  const pageSize = toRef(table, 'pageSize')
 
   const dialogVisible = ref(false)
 
-  const ruleFormRef = ref<FormInstance>()
-
-  const submitForm = async (formEl: FormInstance | undefined) => {
-    if (!formEl) return
-    await formEl.validate((valid, fields) => {
-      if (valid) {
-        console.log('submit!')
-      } else {
-        console.log('error submit!', fields)
-      }
-    })
-  }
+  const searchFormRef = ref<FormInstance>()
 
   const resetForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return
-    form.endDate = ''
+    searchForm.endDate = ''
     formEl.resetFields()
   }
 
-  const getTableList = () => {
+  const handleView = (row: any) => {
+    console.log(row)
+  }
+
+  const getTableList = (page: number = table.page, pageSize: number = table.pageSize) => {
+    table.loading = true
+    console.log({ ...searchForm })
     queryUser({
-      page: 1,
-      pageSize: 10,
-      ...form
-    }).then(res => {
-      total = res.total
-      tableData = res.dataList
-      loading = false
+      page,
+      pageSize,
+      ...searchForm
+    }).then((res: any) => {
+      table.total = res.total
+      table.tableData = res.dataList
+      table.loading = false
     })
   }
 
-  export default {
-    name: 'MemberList',
-    components: {
-      CreateMember
-    },
-    data() {
-      const form = {
-        keyWord: '',
-        sex: '',
-        beginDate: '',
-        endDate: '',
-        tags: []
-      }
-      return {
-        form,
-        tableData: [],
-        dialogVisible: false
-      }
-    },
-    mixins: [list],
-    methods: {
-      resetForm() {
-        this.form.endDate = ''
-        this.$refs.form.resetFields()
-      },
-      handleView() {
-        this.$router.push({ name: 'MemberDetail' })
-      },
-      getList() {
-        this.loading = true
-        const params = Object.assign(this.form, {
-          page: this.page,
-          pageSize: this.pageSize
-        })
-        queryUser(params).then(res => {
-          console.log(res)
-          this.total = res.total
-          this.tableData = res.dataList
-          this.loading = false
-        })
-      }
-    },
-    mounted() {
-      this.getList()
-    }
-  }
+  watch([page, pageSize], () => {
+    getTableList(table.page, table.pageSize)
+  })
+
+  onMounted(() => {
+    getTableList()
+  })
 </script>
 
 <style lang="scss" scoped>

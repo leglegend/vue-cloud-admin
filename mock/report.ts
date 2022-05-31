@@ -20,7 +20,6 @@ export default [
     method: 'post',
     response: params => {
       const body = JSON.parse(params.body)
-      console.log(body)
       const day = body.type ? 30 : 7
       const table = {
         xAxis: [],
@@ -29,7 +28,6 @@ export default [
         vip: []
       }
       for (let i = 0; i < day; i++) {
-        console.log(i)
         const date = new Date()
         date.setDate(date.getDate() - i)
         table.xAxis.unshift([date.getMonth() + 1, date.getDate()].join('-'))

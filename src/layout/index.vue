@@ -26,7 +26,7 @@
         </div>
         <div class="keep-alive">
           <el-tag
-            :effect="$route.name == 'Home' ? 'dark' : 'light'"
+            :effect="route.name == 'Home' ? 'dark' : 'light'"
             size="small"
             class="cannotselect"
             @click="onTapHomeTag"
@@ -34,16 +34,16 @@
             首页
           </el-tag>
           <el-tag
-            v-for="route in keepAlives"
-            :key="route.name"
-            :closable="route.name != 'Home'"
+            v-for="item in keepAlives.list"
+            :key="item.name"
+            :closable="item.name != 'Home'"
             size="small"
             class="cannotselect"
-            :effect="route.name == $route.name ? 'dark' : 'light'"
-            @click="onTapTag(route)"
-            @close="onTagClose(route)"
+            :effect="item.name == route.name ? 'dark' : 'light'"
+            @click="onTapTag(item)"
+            @close="onTagClose(item)"
           >
-            {{ route.meta.title }}
+            {{ item.meta.title }}
           </el-tag>
         </div>
       </el-header>
@@ -67,10 +67,12 @@
 <script lang="ts" setup>
   import AsideNav from './AsideNav.vue'
   import { useStore } from 'vuex'
-  import { useRouter, useRoute, RouteLocationNormalizedLoaded } from 'vue-router'
+  import { useRouter, useRoute } from 'vue-router'
   import { watch, computed, reactive, onMounted, onBeforeUnmount } from 'vue'
 
-  let keepAlives = reactive([]) as Array<RouteLocationNormalizedLoaded>
+  let keepAlives = reactive({
+    list: [] as any
+  })
   const store = useStore()
   const isMobile = computed(() => {
     return store.state.app.isMobile.value
@@ -81,7 +83,7 @@
 
   const include = computed(() => {
     const include = ['Home']
-    keepAlives.forEach(route => {
+    keepAlives.list.forEach((route: any) => {
       include.push(route.name as string)
     })
     return include
@@ -93,26 +95,30 @@
   watch(
     route,
     (newVal, oldVal) => {
-      const alives: any = keepAlives.filter(item => item.name === route.name)
+      const alives: any = keepAlives.list.filter((item: any) => item.name === route.name)
       if (!alives.length && route.name !== 'Home') {
-        keepAlives.push(route)
+        keepAlives.list.push({
+          name: route.name,
+          meta: route.meta,
+          fullPath: route.fullPath
+        })
       }
     },
     { immediate: true }
   )
 
-  function onTapTag(tapRoute: RouteLocationNormalizedLoaded) {
+  function onTapTag(tapRoute: any) {
     if (tapRoute.fullPath === route.fullPath) return
-    router.push(route.fullPath)
+    router.push(tapRoute.fullPath)
   }
 
-  function onTagClose(tapRoute: RouteLocationNormalizedLoaded) {
-    keepAlives = keepAlives.filter(item => item.name !== tapRoute.name)
+  function onTagClose(tapRoute: any) {
+    keepAlives.list = keepAlives.list.filter((item: any) => item.name !== tapRoute.name)
     if (tapRoute.name === route.name) {
-      if (!keepAlives.length) onTapHomeTag()
+      if (!keepAlives.list.length) onTapHomeTag()
       else {
         router.push({
-          name: keepAlives[keepAlives.length - 1].name as string
+          name: keepAlives.list[keepAlives.list.length - 1].name as string
         })
       }
     }
@@ -260,7 +266,7 @@
     .slide-fade-leave-active {
       transition: all 0.4s;
     }
-    .slide-fade-enter,
+    .slide-fade-enter-from,
     .slide-fade-leave-to {
       transform: translateX(15px);
       opacity: 0;
