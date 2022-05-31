@@ -32,7 +32,9 @@
                     :key="childIndex"
                     @click="routeTo(child, route)"
                   >
-                    <i :class="child.meta.icon"></i>
+                    <el-icon>
+                      <component :is="child.meta.icon"></component>
+                    </el-icon>
                     {{ child.meta.title }}
                   </el-menu-item>
                 </template>
@@ -202,6 +204,13 @@
         }
       }
       .el-menu-item span {
+        height: 0;
+        width: 0;
+        overflow: hidden;
+        visibility: hidden;
+        display: inline-block;
+      }
+      .el-sub-menu__title span {
         height: 0;
         width: 0;
         overflow: hidden;

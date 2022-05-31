@@ -14,10 +14,8 @@
             </div>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item icon="el-icon-setting" command="persion">
-                  个人资料
-                </el-dropdown-item>
-                <el-dropdown-item icon="el-icon-circle-close" divided command="logout">
+                <el-dropdown-item icon="Setting" command="persion">个人资料</el-dropdown-item>
+                <el-dropdown-item icon="CircleClose" divided command="logout">
                   退出登录
                 </el-dropdown-item>
               </el-dropdown-menu>

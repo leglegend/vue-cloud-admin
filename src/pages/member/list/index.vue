@@ -113,7 +113,6 @@
         </el-card>
       </el-col>
     </el-row>
-    <!-- <create-member :visible.sync="dialogVisible" /> -->
   </div>
 </template>
 
@@ -122,7 +121,6 @@
   import useTable from '@/utils/hooks/table'
   import { onMounted, reactive, ref, toRef, watch } from 'vue'
   import type { FormInstance } from 'element-plus'
-  // import CreateMember from './components/CreateMember.vue'
 
   const searchForm = reactive({
     keyWord: '',

@@ -1,7 +1,7 @@
 <template>
   <div class="member-detail">
     <el-card shadow="hover">
-      <el-page-header @back="goBack" content="用户详情"> </el-page-header>
+      <el-page-header @back="goBack" content="用户详情"></el-page-header>
     </el-card>
 
     <el-row class="member-detail-row" :gutter="15">
@@ -9,37 +9,38 @@
         <el-card shadow="hover" body-style="padding:0">
           <div class="user-info">
             <div class="edit-user cannotselect" @click="editDetail">
-              <i
-                :class="
-                  editLoading ? 'el-icon-loading' : 'el-icon-edit-outline'
-                "
-              ></i>
+              <i :class="editLoading ? 'el-icon-loading' : 'el-icon-edit-outline'"></i>
             </div>
             <div class="user-logo">
-              <img src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-14903f47-ecdc-4230-b720-dd24d6d48f85/70ed1b9b-3cd1-4dd1-9768-780bf1c1f613.jpg" />
+              <img
+                src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-14903f47-ecdc-4230-b720-dd24d6d48f85/70ed1b9b-3cd1-4dd1-9768-780bf1c1f613.jpg"
+              />
             </div>
             <div class="user-name">
               {{ detail.name }}
-              <i :class="detail.sex=='1'?'el-icon-male':'el-icon-female'"></i>
+              <el-icon>
+                <Male v-if="detail.sex == '1'" class="el-icon-male" />
+                <Female v-else class="el-icon-female" />
+              </el-icon>
             </div>
             <el-descriptions class="margin-top" :column="1">
               <el-descriptions-item>
-                <template slot="label">
-                  <i class="margin-right el-icon-phone-outline"></i>
+                <template #label>
+                  <el-icon class="margin-right"><Iphone /></el-icon>
+                  {{ detail.phone }}
                 </template>
-                {{detail.phone}}
               </el-descriptions-item>
               <el-descriptions-item>
-                <template slot="label">
-                  <i class="margin-right el-icon-house"></i>
+                <template #label>
+                  <el-icon class="margin-right"><House /></el-icon>
+                  {{ detail.address }}
                 </template>
-                {{detail.address}}
               </el-descriptions-item>
               <el-descriptions-item>
-                <template slot="label">
-                  <i class="margin-right el-icon-message"></i>
+                <template #label>
+                  <el-icon class="margin-right"><Message /></el-icon>
+                  {{ detail.mail }}
                 </template>
-                {{detail.mail}}
               </el-descriptions-item>
             </el-descriptions>
             <el-divider></el-divider>
@@ -47,7 +48,7 @@
           <radar-chart :detail="detail" />
           <div class="user-tag">
             <el-divider></el-divider>
-            <el-tag type="primary">程序员</el-tag>
+            <el-tag>程序员</el-tag>
             <el-tag type="success">技术宅</el-tag>
             <el-tag type="warning">新手小白</el-tag>
           </div>
@@ -66,7 +67,7 @@
                   :md="12"
                   :lg="8"
                 >
-                  <member-card :card="card" />
+                  <!-- <member-card :card="card" /> -->
                 </el-col>
                 <el-col class="card-col" :sm="24" :md="12" :lg="8">
                   <el-card shadow="hover" body-style="padding:0">
@@ -82,65 +83,65 @@
           </el-tabs>
         </el-card>
         <el-card class="tarde-list" shadow="hover">
-          <template slot="header"> 消费流水 </template>
+          <template slot="header">消费流水</template>
           <trade-list />
         </el-card>
       </el-col>
     </el-row>
 
     <edit-member
-      :visible.sync="editLoading"
+      :visible="editLoading"
       :detail="detail"
-      @success="getDetail"
+      @update="editLoading = $event"
+      @success="getMemberDetail"
     />
   </div>
 </template>
 
-<script>
-import { getDetail } from '@/api/user.js'
-import MemberCard from '@/components/MemberCard.vue'
-import RadarChart from './components/RadarChart.vue'
-import TradeList from './components/TradeList.vue'
-import EditMember from './components/EditMember.vue'
+<script lang="ts" setup name="MemberDetail">
+  import { getDetail } from '@/api/user'
+  // import MemberCard from '@/components/MemberCard.vue'
+  import RadarChart from './components/RadarChart.vue'
+  import TradeList from './components/TradeList.vue'
+  import EditMember from './components/EditMember.vue'
+  import { computed, onMounted, reactive, ref } from 'vue'
 
-export default {
-  name: 'MemberDetail',
-  components: {
-    RadarChart,
-    MemberCard,
-    TradeList,
-    EditMember
-  },
-  data () {
-    return {
-      detail: {},
-      loading: false,
-      editLoading: false,
-      activeName: 'card'
-    }
-  },
-  methods: {
-    handleClick (tab, event) {
-      console.log(tab, event)
-    },
-    goBack () {
-      window.history.back()
-    },
-    editDetail () {
-      this.editLoading = true
-    },
-    getDetail () {
-      this.loading = true
-      getDetail().then((res) => {
-        this.detail = res
-        this.loading = true
-      })
-    }
-  },
-  mounted () {
-    this.getDetail()
+  const member = reactive({
+    detail: {} as any,
+    loading: false
+  })
+
+  const detail = computed(() => {
+    return member.detail
+  })
+
+  const getMemberDetail = () => {
+    member.loading = true
+    getDetail().then(res => {
+      member.detail = res
+      member.loading = false
+    })
   }
-}
+
+  const activeName = ref('card')
+
+  const goBack = () => {
+    window.history.back()
+  }
+
+  onMounted(() => {
+    getMemberDetail()
+  })
+
+  function handleClick(tab: any, event: any) {
+    console.log(tab, event)
+  }
+
+  const editLoading = ref(false)
+
+  function editDetail() {
+    editLoading.value = true
+  }
 </script>
 
 <style lang="scss" scoped>

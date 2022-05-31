@@ -27,7 +27,9 @@
 <script setup lang="ts">
   import { reactive, ref } from '@vue/reactivity'
   import { useStore } from 'vuex'
+  import { useRouter } from 'vue-router'
   const store = useStore()
+  const router = useRouter()
   interface Login {
     account: string
     password: string
@@ -49,7 +51,7 @@
         password: form.password
       })
       .then(res => {
-        console.log(res)
+        router.push({ name: 'Home' })
       })
   }
 </script>
