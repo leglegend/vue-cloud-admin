@@ -35,7 +35,7 @@ cd vue-cloud-admin
 npm install
 
 #启动
-npm run serve
+npm run dev:h5
 或直接使用HbuilderX运行项目
 ```
 ## 发布
