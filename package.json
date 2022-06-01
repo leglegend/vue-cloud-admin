@@ -1,0 +1,29 @@
+{
+  "name": "uni-cloud-admin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "echarts": "^5.3.2",
+    "element-ui": "^2.15.8",
+    "mockjs": "^1.1.0",
+    "uni-simple-router": "^2.0.8-beta.4",
+    "vuex": "^3.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.16.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-vue": "^9.0.1",
+    "sass": "^1.52.1"
+  }
+}
