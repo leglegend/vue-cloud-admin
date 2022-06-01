@@ -22,12 +22,12 @@ cd vue-cloud-admin
 npm install
 
 #启动
-npm run serve
+npm run dev:h5
 或直接使用HbuilderX运行项目(需在manifest文件中刷新appid)
 ```
 ## 发布
 ```bash
-npm run build
+npm run build:h5
 或直接使用HbuilderX发布项目
 ```
 
