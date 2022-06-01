@@ -10,6 +10,11 @@
 ![avatar](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-14903f47-ecdc-4230-b720-dd24d6d48f85/2b6695b0-4bac-4702-9691-a0de3b604f8a.jpeg)
 
 ## 使用
+### 1.通过HbuilderX导入项目
+```bash
+导入后不需要初始化，HbuilderX会自动初始化，完成后直接通过HbuilderX运行到Chrome浏览器即可。
+```
+### 2.通过git拉取代码
 ```bash
 # 克隆代码
 git clone -b uni-app https://github.com/ni5328109/vue-cloud-admin.git
@@ -22,6 +27,10 @@ npm install
 
 #启动
 直接使用HbuilderX运行项目(需在manifest文件中刷新appid)
+```
+### 3.下载ZIP插件
+```
+下载后解压，通过HbuilderX打开项目，初始化运行即可
 ```
 ## 发布
 ```bash
