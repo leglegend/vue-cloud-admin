@@ -1,77 +1,81 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../pages/home/index.vue'
-import Layout from '../layout/index.vue'
-import Login from '../pages/login/index.vue'
-import List from '../pages/member/list/index.vue'
-import Card from '../pages/member/card/index.vue'
-import Detail from '../pages/order/detail/index.vue'
-import MemberDetail from '../pages/member/detail/index.vue'
+import Vue from "vue";
+import VueRouter from "vue-router";
+import Home from "../pages/home/index.vue";
+import Layout from "../layout/index.vue";
+import Login from "../pages/login/index.vue";
+import List from "../pages/member/list/index.vue";
+import Card from "../pages/member/card/index.vue";
+import Detail from "../pages/order/detail/index.vue";
+import MemberDetail from "../pages/member/detail/index.vue";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/login',
-    component: Login
+    path: "/login",
+    component: Login,
   },
   {
-    path: '/',
+    path: "/test",
+    component: () => import("../pages/test/index.vue"),
+  },
+  {
+    path: "/",
     component: Layout,
-    redirect: '/home',
+    redirect: "/home",
     children: [
       {
-        path: 'home',
-        name: 'Home',
+        path: "home",
+        name: "Home",
         component: Home,
-        meta: { title: '首页', icon: 'el-icon-s-home' },
-        props: ({ params }) => params
-      }
-    ]
+        meta: { title: "首页", icon: "el-icon-s-home" },
+        props: ({ params }) => params,
+      },
+    ],
   },
   {
-    path: '/member',
+    path: "/member",
     component: Layout,
-    meta: { title: '列表', icon: 'el-icon-s-grid' },
+    meta: { title: "列表", icon: "el-icon-s-grid" },
     children: [
       {
-        path: 'list',
-        name: 'MemberList',
+        path: "list",
+        name: "MemberList",
         component: List,
-        meta: { title: '分页列表', icon: 'el-icon-tickets' },
-        props: ({ params }) => params
+        meta: { title: "分页列表", icon: "el-icon-tickets" },
+        props: ({ params }) => params,
       },
       {
-        path: 'card',
-        name: 'Card',
+        path: "card",
+        name: "Card",
         component: Card,
-        meta: { title: '应用列表', icon: 'el-icon-bank-card' },
-        props: ({ params }) => params
-      }
-    ]
+        meta: { title: "应用列表", icon: "el-icon-bank-card" },
+        props: ({ params }) => params,
+      },
+    ],
   },
   {
-    path: '/list',
+    path: "/list",
     component: Layout,
-    meta: { title: '表单', icon: 'el-icon-s-order' },
+    meta: { title: "表单", icon: "el-icon-s-order" },
     children: [
       {
-        path: 'detail',
-        name: 'TradeDetail',
+        path: "detail",
+        name: "TradeDetail",
         component: Detail,
-        meta: { title: '详情页', icon: 'el-icon-c-scale-to-original' },
-        props: ({ params }) => params
+        meta: { title: "详情页", icon: "el-icon-c-scale-to-original" },
+        props: ({ params }) => params,
       },
       {
-        path: 'persion',
-        name: 'MemberDetail',
+        path: "persion",
+        name: "MemberDetail",
         component: MemberDetail,
-        meta: { title: '个人资料', icon: 'el-icon-user' },
-        props: ({ params }) => params
-      }
-    ]
-  }
-]
+        meta: { title: "个人资料", icon: "el-icon-user" },
+        props: ({ params }) => params,
+      },
+    ],
+  },
+];
 
 // [
 //   {
@@ -90,12 +94,12 @@ const routes = [
 // ]
 
 const router = new VueRouter({
-  routes
-})
+  routes,
+});
 
 router.beforeEach((to, from, next) => {
-  if (localStorage.getItem('token') || to.fullPath === '/login') next()
-  else if (from.fullPath !== '/login')router.push('/login')
-})
+  if (localStorage.getItem("token") || to.fullPath === "/login") next();
+  else if (from.fullPath !== "/login") router.push("/login");
+});
 
-export default router
+export default router;
